@@ -2,11 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database'); 
 require('dotenv').config();
+const chatbotRoutes = require('./routes/chatbot');
 
 
 connectDB();
 
 const app = express();
+
+app.use('/', chatbotRoutes);
 
 app.use(express.json());
 app.use(cors());

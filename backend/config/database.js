@@ -15,5 +15,4 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-KkIKXH9aVieg5IhS
 module.exports = connectDB;
