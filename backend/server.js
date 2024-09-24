@@ -2,14 +2,17 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database'); 
 require('dotenv').config();
-const chatbotRoutes = require('./routes/chatbot');
+
+const sessionRoutes = require('./routes/session-routes');
+const openaiRoutes = require('./routes/openai-routes');
 
 
 connectDB();
 
 const app = express();
 
-app.use('/', chatbotRoutes);
+app.use('/', sessionRoutes);
+app.use('/', openaiRoutes);
 
 app.use(express.json());
 app.use(cors());

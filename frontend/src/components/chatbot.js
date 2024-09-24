@@ -2,38 +2,47 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Chatbot = () => {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState([]);
+  const [sessionId, setSessionId] = useState(null);
+  const [currentQuestion, setCurrentQuestion] = useState('');
   const [response, setResponse] = useState('');
-  const [questions, setQuestions] = useState([]);
+  const [sessionCompleted, setSessionCompleted] = useState(false);
 
   useEffect(() => {
-    // İlk soruları backend'den alalım
-    axios.get('http://localhost:5000/questions')
-      .then(res => setQuestions(res.data))
-      .catch(err => console.log(err));
+    axios.post('http://localhost:5000/start-session')
+    .then(res => {
+      setSessionId(res.data.sessionId);
+      axios.get('http://localhost:5000/generate-question')
+        .then(response => setCurrentQuestion(response.data.question))
+        .catch(err => console.log(err));
+    })
+    .catch(err => console.log(err));
   }, []);
 
   const handleAnswerSubmit = () => {
     if (response !== '') {
-      const newAnswers = [...answers, response];
-      setAnswers(newAnswers);
-      setCurrentQuestion(currentQuestion + 1);
-      setResponse('');
-
-      // Cevapları backend'e gönder
       axios.post('http://localhost:5000/save-answer', {
-        question: questions[currentQuestion],
+        sessionId,
         answer: response,
-      });
+      })
+        .then(res => {
+        if (res.data.nextQuestion) {
+          axios.get('http://localhost:5000/generate-question')
+            .then(response => setCurrentQuestion(response.data.question))
+            .catch(err => console.log(err));
+          setResponse('');
+        } else {
+          setSessionCompleted(true);
+        }
+      })
+      .catch(err => console.log(err));
     }
   };
 
   return (
     <div>
-      {questions.length > 0 && currentQuestion < questions.length ? (
+      {!sessionCompleted ? (
         <>
-          <h1>{questions[currentQuestion]}</h1>
+          <h1>{currentQuestion}</h1>
           <input 
             type="text" 
             value={response} 
@@ -42,7 +51,7 @@ const Chatbot = () => {
           <button onClick={handleAnswerSubmit}>Submit</button>
         </>
       ) : (
-        <h1>Chatbot completed</h1>
+        <h1>Chatbot completed. Thank you for your responses!</h1>
       )}
     </div>
   );
