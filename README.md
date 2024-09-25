@@ -1,1 +1,1 @@
-# chatbot-bolt
+I attempted to integrate OpenAI API into the project, but since the API requires a paid plan, I only wrote the relevant OpenAI code. However, I have completed the chatbot with 10 predefined questions without using OpenAI. I hope you like it. 
