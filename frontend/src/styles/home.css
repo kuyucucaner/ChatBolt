@@ -1,0 +1,18 @@
+body{
+    height: 100vh;
+    overflow: hidden;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    background-color: #d8d8d8;
+}
+.home-container{
+    margin: auto;
+    width: 80%;
+    height: auto;
+}
+.home-title{
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 1px;
+}

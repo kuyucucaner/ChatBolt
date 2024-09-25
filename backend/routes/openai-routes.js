@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { generateQuestion } = require('../controllers/openai-controller');
+const openaiController = require('../controllers/openai-controller');
 
-router.get('/generate-question', generateQuestion);
+router.post('/start-session', openaiController.startSession);
+router.post('/save-answer', openaiController.saveAnswer);
 
 module.exports = router;

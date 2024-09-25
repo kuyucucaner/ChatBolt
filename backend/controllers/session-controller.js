@@ -1,8 +1,9 @@
 const SessionModel = require('../models/session-model');
+const { v4: uuidv4 } = require('uuid');
 
 
 exports.startSession = async (req, res) => {
-  const sessionId = Math.random().toString(36).substring(2, 9); 
+  const sessionId = uuidv4();
   const questions = [
     "What is your favorite breed of cat, and why?",
     "How do you think cats communicate with their owners?",
@@ -21,10 +22,12 @@ exports.startSession = async (req, res) => {
       sessionId,
       questions,
       answers: [],
+      currentQuestionIndex: 0,  
     });
     await newSession.save();
-    res.json({ sessionId, currentQuestion: questions[0] });
+    res.status(201).json({ sessionId, currentQuestion: questions[0] });
   } catch (error) {
+    console.error('Error starting session:', error.message);
     res.status(500).json({ message: 'Error starting session' });
   }
 };
@@ -36,8 +39,11 @@ exports.saveAnswer = async (req, res) => {
     const session = await SessionModel.findOne({ sessionId });
     if (!session) return res.status(404).json({ message: 'Session not found' });
 
-    session.answers.push(answer);
-    session.currentQuestionIndex += 1;
+    const currentQuestion = session.questions[session.currentQuestionIndex];
+    session.answers.push({ question: currentQuestion, answer });
+
+    session.currentQuestionIndex += 1; 
+
 
     if (session.currentQuestionIndex < session.questions.length) {
       await session.save();
@@ -48,6 +54,7 @@ exports.saveAnswer = async (req, res) => {
       res.json({ message: 'Session completed' });
     }
   } catch (error) {
+    console.error('Error saving answer:', error.message);
     res.status(500).json({ message: 'Error saving answer' });
   }
 };
