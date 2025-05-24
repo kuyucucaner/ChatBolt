@@ -12,7 +12,6 @@ All conversations and responses are stored using MongoDB.
 - 🔐 **Session-based Q&A Bot** for fixed 10 questions
 - 🤖 **ChatGPT integration** for dynamic conversations
 - 💾 All interactions stored with **MongoDB (Mongoose)**
-- 🧠 Separate logic for static and AI-based responses
 - 🧪 Simple and clean UI for testing bot behavior
 - 📷 1 included **screenshot** of the main interface
 
